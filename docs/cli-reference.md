@@ -58,13 +58,6 @@ Explicit add-ons and deployment adapters can add their own required files and
 dependencies. Add `-y` to use defaults for every remaining option; when the
 target is non-empty, also pass `--force` or the command exits without writing.
 
-Rsbuild currently supports the built-in standard and blank scaffolds, built-in
-demo pages, Tailwind, and the ESLint/Biome toolchains. Templates, deployment
-adapters, catalog business/example add-ons, and `tanstack add` selections other
-than toolchains are not yet supported. Explicit incompatible combinations fail
-before the target directory is written. Use
-`tanstack create --list-add-ons --bundler rsbuild` to see the filtered catalog.
-
 ### Programmatic generation
 
 Use `@tanstack/create/worker` in Cloudflare Workers and other edge SSR runtimes. It does not import the generated template manifest at module startup. Instead, provide a loader for the framework and add-on chunks your Worker supports.

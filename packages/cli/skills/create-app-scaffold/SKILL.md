@@ -87,29 +87,6 @@ npx @tanstack/cli create custom-app \
 
 ## Common Mistakes
 
-### CRITICAL Combine Rsbuild with templates, deployments, or catalog add-ons
-
-Wrong:
-
-```bash
-npx @tanstack/cli create my-app \
-  --bundler rsbuild \
-  --template ecommerce \
-  --deployment cloudflare \
-  --add-ons clerk \
-  -y
-```
-
-Correct:
-
-```bash
-npx @tanstack/cli create my-app --bundler rsbuild --toolchain eslint -y
-```
-
-The initial Rsbuild surface supports standard/blank scaffolds, built-in demo
-pages, Tailwind, and ESLint/Biome. The CLI rejects templates, deployments, and
-catalog business/example add-ons before writing the target directory.
-
 ### HIGH Pass --add-ons without explicit ids
 
 Wrong:

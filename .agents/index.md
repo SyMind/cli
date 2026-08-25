@@ -81,10 +81,6 @@ node ../cli/packages/cli/dist/index.js create my-app
 | `-y`                 | Accept defaults                                         |
 | `-f, --force`        | Overwrite existing                                      |
 
-Rsbuild currently supports standard/blank scaffolds, built-in pages, Tailwind,
-and ESLint/Biome only. Templates, deployments, and other catalog add-ons are
-Vite-only.
-
 ## EJS Template Variables
 
 | Variable         | Type    | Description                              |
