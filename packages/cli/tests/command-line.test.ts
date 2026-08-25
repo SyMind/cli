@@ -634,6 +634,40 @@ describe('normalizeOptions', () => {
     expect(options?.chosenAddOns.map((addOn) => addOn.id)).toEqual(['biome'])
   })
 
+  it.each([
+    ['file-router', false],
+    ['typescript', true],
+    ['tsx', true],
+  ])(
+    'normalizes Rsbuild with the legacy %s template alias',
+    async (template, routerOnly) => {
+      __testRegisterFramework({
+        id: 'react',
+        name: 'React',
+        bundlers: [
+          { id: 'vite', name: 'Vite', description: 'Build with Vite' },
+          {
+            id: 'rsbuild',
+            name: 'Rsbuild',
+            description: 'Build with Rsbuild',
+          },
+        ],
+        defaultBundler: 'vite',
+        getAddOns: () => [],
+      })
+
+      const options = await normalizeOptions({
+        projectName: 'test',
+        framework: 'react',
+        bundler: 'rsbuild',
+        template,
+      })
+
+      expect(options?.bundler).toBe('rsbuild')
+      expect(options?.routerOnly).toBe(routerOnly)
+    },
+  )
+
   it('rejects unsupported Rsbuild add-ons during normalization', async () => {
     __testRegisterFramework({
       id: 'react',
@@ -815,6 +849,19 @@ describe('validateLegacyCreateFlags', () => {
 
     expect(result.error).toBeUndefined()
   })
+
+  it.each(['file-router', 'typescript', 'tsx'])(
+    'allows Rsbuild with the legacy %s template alias',
+    (template) => {
+      const result = validateLegacyCreateFlags({
+        bundler: 'rsbuild',
+        template,
+      })
+
+      expect(result.error).toBeUndefined()
+      expect(result.warnings[0]).toContain('--template')
+    },
+  )
 
   it.each([
     [{ starter: 'ecommerce' }, '--starter'],

@@ -321,9 +321,16 @@ export function validateLegacyCreateFlags(cliOptions: CliOptions): {
 } {
   const warnings: Array<string> = []
   const legacyTemplate = getLegacyTemplateValue(cliOptions.template)
+  const isSupportedLegacyTemplate =
+    legacyTemplate !== undefined &&
+    SUPPORTED_LEGACY_TEMPLATES.has(legacyTemplate)
 
   if (cliOptions.bundler?.toLowerCase() === 'rsbuild') {
-    if (cliOptions.starter || cliOptions.template || cliOptions.templateId) {
+    if (
+      cliOptions.starter ||
+      (cliOptions.template && !isSupportedLegacyTemplate) ||
+      cliOptions.templateId
+    ) {
       return {
         warnings,
         error:
@@ -480,6 +487,9 @@ export async function normalizeOptions(
   const blank = cliOptions.blank === true
 
   const legacyTemplate = getLegacyTemplateValue(cliOptions.template)
+  const isSupportedLegacyTemplate =
+    legacyTemplate !== undefined &&
+    SUPPORTED_LEGACY_TEMPLATES.has(legacyTemplate)
 
   if (!cliOptions.starter) {
     if (cliOptions.template && !legacyTemplate) {
@@ -507,7 +517,11 @@ export async function normalizeOptions(
     : (cliOptions.bundler ?? 'vite')
 
   if (bundler === 'rsbuild') {
-    if (cliOptions.starter || cliOptions.template || cliOptions.templateId) {
+    if (
+      cliOptions.starter ||
+      (cliOptions.template && !isSupportedLegacyTemplate) ||
+      cliOptions.templateId
+    ) {
       throw new Error('Rsbuild does not currently support templates.')
     }
     if (cliOptions.deployment || opts?.forcedDeployment) {
