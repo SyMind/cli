@@ -600,6 +600,66 @@ describe('normalizeOptions', () => {
     expect(options?.intent).toBe(false)
   })
 
+  it('normalizes Rsbuild and keeps toolchain add-ons', async () => {
+    __testRegisterFramework({
+      id: 'react',
+      name: 'React',
+      bundlers: [
+        { id: 'vite', name: 'Vite', description: 'Build with Vite' },
+        {
+          id: 'rsbuild',
+          name: 'Rsbuild',
+          description: 'Build with Rsbuild',
+        },
+      ],
+      defaultBundler: 'vite',
+      getAddOns: () => [
+        {
+          id: 'biome',
+          name: 'Biome',
+          modes: ['file-router'],
+          type: 'toolchain',
+        },
+      ],
+    })
+
+    const options = await normalizeOptions({
+      projectName: 'test',
+      framework: 'react',
+      bundler: 'rsbuild',
+      toolchain: 'biome',
+    })
+
+    expect(options?.bundler).toBe('rsbuild')
+    expect(options?.chosenAddOns.map((addOn) => addOn.id)).toEqual(['biome'])
+  })
+
+  it('rejects unsupported Rsbuild add-ons during normalization', async () => {
+    __testRegisterFramework({
+      id: 'react',
+      name: 'React',
+      bundlers: [
+        { id: 'vite', name: 'Vite', description: 'Build with Vite' },
+        {
+          id: 'rsbuild',
+          name: 'Rsbuild',
+          description: 'Build with Rsbuild',
+        },
+      ],
+      defaultBundler: 'vite',
+      getAddOns: () => [],
+    })
+
+    await expect(
+      normalizeOptions({
+        projectName: 'test',
+        framework: 'react',
+        bundler: 'rsbuild',
+        addOns: ['form'],
+      }),
+    ).rejects.toThrow('Rsbuild currently supports toolchains only')
+  })
+
   it('keeps explicitly selected integrations in the blank preset', async () => {
     __testRegisterFramework({
       id: 'react',
@@ -726,6 +786,33 @@ describe('validateLegacyCreateFlags', () => {
   it('accepts --blank by itself', () => {
     const result = validateLegacyCreateFlags({ blank: true })
     expect(result.warnings).toEqual([])
+    expect(result.error).toBeUndefined()
+  })
+
+  it.each([
+    [{ starter: 'blog' }, '--starter'],
+    [{ template: 'blog' }, '--template'],
+    [{ templateId: 'blog' }, '--template-id'],
+    [{ deployment: 'cloudflare' }, '--deployment'],
+    [{ addOns: ['form'] }, 'toolchains only'],
+  ])(
+    'rejects unsupported Rsbuild combinations containing %s',
+    (flags, text) => {
+      const result = validateLegacyCreateFlags({
+        bundler: 'rsbuild',
+        ...flags,
+      })
+
+      expect(result.error).toContain(text)
+    },
+  )
+
+  it('allows Rsbuild with a toolchain', () => {
+    const result = validateLegacyCreateFlags({
+      bundler: 'rsbuild',
+      toolchain: 'biome',
+    })
+
     expect(result.error).toBeUndefined()
   })
 

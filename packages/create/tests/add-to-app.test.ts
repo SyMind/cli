@@ -109,7 +109,7 @@ describe('getCurrentConfiguration', () => {
     environment.writeFile('/foo/.cta.json', JSON.stringify(configFile, null, 2))
 
     const out = await getCurrentConfiguration(environment, '/foo')
-    expect(out).toEqual(configFile)
+    expect(out).toEqual({ ...configFile, bundler: 'vite' })
   })
 })
 

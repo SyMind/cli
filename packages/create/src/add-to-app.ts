@@ -96,16 +96,18 @@ async function createOptions(
   targetDir: string,
 ): Promise<Options> {
   const framework = getFrameworkById(json.framework)
+  const bundler = json.bundler ?? 'vite'
 
   const starter = json.starter ? await loadStarter(json.starter) : undefined
   const chosenAddOns = await finalizeAddOns(framework!, json.mode!, [
     ...json.chosenAddOns,
     ...addOns,
-  ])
+  ], bundler)
 
   return {
     ...json,
     framework,
+    bundler,
     tailwind:
       (json.tailwind ?? true) ||
       chosenAddOns.some((addOn) => addOn.tailwind === true),

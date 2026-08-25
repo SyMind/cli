@@ -27,6 +27,11 @@ beforeEach(() => {
   __testRegisterFramework({
     id: 'react',
     name: 'react',
+    bundlers: [
+      { id: 'vite', name: 'Vite', description: 'Build with Vite' },
+      { id: 'rsbuild', name: 'Rsbuild', description: 'Build with Rsbuild' },
+    ],
+    defaultBundler: 'vite',
     getAddOns: () => [
       {
         id: 'react-query',
@@ -56,6 +61,11 @@ beforeEach(() => {
   __testRegisterFramework({
     id: 'solid',
     name: 'solid',
+    bundlers: [
+      { id: 'vite', name: 'Vite', description: 'Build with Vite' },
+      { id: 'rsbuild', name: 'Rsbuild', description: 'Build with Rsbuild' },
+    ],
+    defaultBundler: 'vite',
     getAddOns: () => [],
   } as unknown as Framework)
 })
@@ -69,6 +79,7 @@ const baseCliOptions: CliOptions = {
 }
 
 function setBasicSpies() {
+  vi.spyOn(prompts, 'selectBundler').mockImplementation(async () => 'vite')
   vi.spyOn(commandLine, 'listTemplateChoices').mockImplementation(async () => [])
   vi
     .spyOn(commandLine, 'resolveStarterSpecifier')
@@ -187,6 +198,41 @@ describe('promptForCreateOptions', () => {
         description: 'Blog template',
       },
     ])
+    expect(
+      vi.mocked(prompts.selectBundler).mock.invocationCallOrder[0],
+    ).toBeLessThan(
+      vi.mocked(prompts.selectTemplate).mock.invocationCallOrder[0],
+    )
+  })
+
+  it('selects Rsbuild before templates and skips unsupported prompts', async () => {
+    setBasicSpies()
+    vi.mocked(prompts.selectBundler).mockResolvedValue('rsbuild')
+    vi.mocked(prompts.selectToolchain).mockResolvedValue('biome')
+
+    const options = await promptForCreateOptions(
+      { ...baseCliOptions, bundler: 'rsbuild', addOns: undefined },
+      {},
+    )
+
+    expect(options?.bundler).toBe('rsbuild')
+    expect(options?.chosenAddOns.map((addOn) => addOn.id)).toEqual(['biome'])
+    expect(prompts.selectTemplate).not.toHaveBeenCalled()
+    expect(prompts.selectDeployment).not.toHaveBeenCalled()
+    expect(prompts.selectAddOns).not.toHaveBeenCalled()
+  })
+
+  it('keeps toolchain selection available for blank Rsbuild projects', async () => {
+    setBasicSpies()
+    vi.mocked(prompts.selectBundler).mockResolvedValue('rsbuild')
+
+    const options = await promptForCreateOptions(
+      { ...baseCliOptions, bundler: 'rsbuild', blank: true },
+      {},
+    )
+
+    expect(options?.projectPreset).toBe('blank')
+    expect(prompts.selectToolchain).toHaveBeenCalled()
   })
 
   it('skips template prompt when template was provided via CLI', async () => {
