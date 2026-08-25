@@ -1,7 +1,7 @@
 import { beforeEach, describe, it, expect, vi } from 'vitest'
 import { resolve } from 'node:path'
 
-import { promptForCreateOptions } from '../src/options'
+import { promptForAddOns, promptForCreateOptions } from '../src/options'
 import {
   __testClearFrameworks,
   __testRegisterFramework,
@@ -47,6 +47,13 @@ beforeEach(() => {
         id: 'biome',
         type: 'toolchain',
         modes: ['file-router'],
+        exclusive: ['linter'],
+      },
+      {
+        id: 'eslint',
+        type: 'toolchain',
+        modes: ['file-router'],
+        exclusive: ['linter'],
       },
     ],
     supportedModes: {
@@ -371,5 +378,22 @@ describe('promptForCreateOptions', () => {
     ])
     expect(options?.tailwind).toBe(true)
     expect(options?.typescript).toBe(true)
+  })
+})
+
+describe('promptForAddOns', () => {
+  it('does not offer a second exclusive Rsbuild toolchain', async () => {
+    vi.mocked(prompts.selectAddOns).mockClear()
+    vi.spyOn(create, 'readConfigFile').mockResolvedValue({
+      projectName: 'test',
+      framework: 'react',
+      bundler: 'rsbuild',
+      mode: 'file-router',
+      chosenAddOns: ['eslint'],
+      version: 1,
+    })
+
+    await expect(promptForAddOns()).resolves.toEqual([])
+    expect(prompts.selectAddOns).not.toHaveBeenCalled()
   })
 })

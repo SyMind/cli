@@ -2,6 +2,7 @@ import { intro } from '@clack/prompts'
 
 import {
   finalizeAddOns,
+  getAllAddOns,
   getFrameworkById,
   getFrameworks,
   getPackageManager,
@@ -306,12 +307,37 @@ export async function promptForAddOns(): Promise<Array<string>> {
   const bundler = resolveBundler(framework, config.bundler).id
 
   if (bundler === 'rsbuild') {
+    const toolchains = getAllAddOns(framework, config.mode!, bundler).filter(
+      (addOn) => addOn.type === 'toolchain',
+    )
+    const configuredAddOnIds = new Set(
+      config.chosenAddOns.map((addOn) => addOn.toLowerCase()),
+    )
+    const configuredExclusiveGroups = new Set(
+      toolchains
+        .filter((addOn) => configuredAddOnIds.has(addOn.id.toLowerCase()))
+        .flatMap((addOn) => addOn.exclusive ?? []),
+    )
+    const unavailableToolchains = toolchains
+      .filter(
+        (addOn) =>
+          configuredAddOnIds.has(addOn.id.toLowerCase()) ||
+          addOn.exclusive?.some((exclusive) =>
+            configuredExclusiveGroups.has(exclusive),
+          ),
+      )
+      .map((addOn) => addOn.id)
+
+    if (unavailableToolchains.length === toolchains.length) {
+      return []
+    }
+
     for (const addOn of await selectAddOns(
       framework,
       config.mode!,
       'toolchain',
       'Which toolchain would you like to add?',
-      config.chosenAddOns,
+      unavailableToolchains,
       false,
       bundler,
     )) {
