@@ -30,6 +30,7 @@ import {
 import {
   listTemplateChoices,
   resolveStarterSpecifier,
+  validateLegacyCreateFlags,
 } from './command-line.js'
 
 import {
@@ -74,6 +75,17 @@ export async function promptForCreateOptions(
   options.bundler = await selectBundler(options.framework, cliOptions.bundler)
 
   if (options.bundler === 'rsbuild') {
+    const validation = validateLegacyCreateFlags({
+      ...cliOptions,
+      bundler: options.bundler,
+      addOns:
+        Array.isArray(cliOptions.addOns) && cliOptions.addOns.length > 0
+          ? cliOptions.addOns
+          : undefined,
+    })
+    if (validation.error) {
+      throw new Error(validation.error)
+    }
     if (forcedAddOns.length > 0) {
       throw new Error('Rsbuild does not currently support forced add-ons.')
     }

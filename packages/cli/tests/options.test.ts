@@ -20,7 +20,14 @@ import type { Framework } from '@tanstack/create'
 import type { CliOptions } from '../src/types'
 
 vi.mock('../src/ui-prompts')
-vi.mock('../src/command-line')
+vi.mock('../src/command-line', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../src/command-line')>()
+  return {
+    ...actual,
+    listTemplateChoices: vi.fn(),
+    resolveStarterSpecifier: vi.fn(),
+  }
+})
 
 beforeEach(() => {
   __testClearFrameworks()
@@ -218,7 +225,7 @@ describe('promptForCreateOptions', () => {
     vi.mocked(prompts.selectToolchain).mockResolvedValue('biome')
 
     const options = await promptForCreateOptions(
-      { ...baseCliOptions, bundler: 'rsbuild', addOns: undefined },
+      { ...baseCliOptions, bundler: undefined, addOns: true },
       {},
     )
 
@@ -228,6 +235,55 @@ describe('promptForCreateOptions', () => {
     expect(prompts.selectDeployment).not.toHaveBeenCalled()
     expect(prompts.selectAddOns).not.toHaveBeenCalled()
   })
+
+  it.each([
+    [{ template: 'blog' }, '--starter, --template, or --template-id'],
+    [{ deployment: 'cloudflare' }, '--deployment'],
+    [{ addOns: ['react-query'] }, 'toolchains only'],
+  ])(
+    'rejects explicit %s after Rsbuild is selected interactively',
+    async (flags, error) => {
+      setBasicSpies()
+      vi.mocked(prompts.selectBundler).mockResolvedValue('rsbuild')
+
+      await expect(
+        promptForCreateOptions(
+          {
+            ...baseCliOptions,
+            bundler: undefined,
+            addOns: true,
+            ...flags,
+          },
+          {},
+        ),
+      ).rejects.toThrow(error)
+    },
+  )
+
+  it.each([
+    ['file-router', false],
+    ['typescript', true],
+    ['tsx', true],
+  ])(
+    'allows the legacy %s template alias after Rsbuild is selected interactively',
+    async (template, routerOnly) => {
+      setBasicSpies()
+      vi.mocked(prompts.selectBundler).mockResolvedValue('rsbuild')
+
+      const options = await promptForCreateOptions(
+        {
+          ...baseCliOptions,
+          bundler: undefined,
+          addOns: true,
+          template,
+        },
+        {},
+      )
+
+      expect(options?.bundler).toBe('rsbuild')
+      expect(options?.routerOnly).toBe(routerOnly)
+    },
+  )
 
   it('keeps toolchain selection available for blank Rsbuild projects', async () => {
     setBasicSpies()
