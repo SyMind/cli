@@ -87,6 +87,17 @@ describe('bundler project generation', () => {
     )
   })
 
+  it('aligns the Solid Biome schema with the pinned package version', async () => {
+    const definition = createSolidFrameworkDefinition()
+    const biome = definition.addOns.find((addOn) => addOn.id === 'biome')!
+    const version = biome.packageAdditions!.devDependencies?.['@biomejs/biome']
+
+    expect(version).toBe('2.4.5')
+    await expect(biome.getFileContents('biome.json.ejs')).resolves.toContain(
+      `/schemas/${version}/schema.json`,
+    )
+  })
+
   it.each([
     ['react', createReactFrameworkDefinition, 'shadcn'],
     ['solid', createSolidFrameworkDefinition, 'solid-ui'],
