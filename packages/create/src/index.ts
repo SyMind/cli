@@ -23,7 +23,7 @@ export {
   normalizeAndValidateBundlerOptions,
   resolveBundler,
   VITE_BUNDLER,
-} from './bundlers.js'
+} from './build-tools.js'
 
 export { loadRemoteAddOn } from './custom-add-ons/add-on.js'
 export { loadStarter } from './custom-add-ons/starter.js'

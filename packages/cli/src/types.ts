@@ -2,7 +2,7 @@ import type { PackageManager } from '@tanstack/create'
 
 export interface CliOptions {
   framework?: string
-  bundler?: string
+  buildTool?: string
   packageManager?: PackageManager
   toolchain?: string | false
   deployment?: string

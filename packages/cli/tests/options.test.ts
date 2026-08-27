@@ -225,7 +225,7 @@ describe('promptForCreateOptions', () => {
     vi.mocked(prompts.selectToolchain).mockResolvedValue('biome')
 
     const options = await promptForCreateOptions(
-      { ...baseCliOptions, bundler: undefined, addOns: true },
+      { ...baseCliOptions, buildTool: undefined, addOns: true },
       {},
     )
 
@@ -250,7 +250,7 @@ describe('promptForCreateOptions', () => {
         promptForCreateOptions(
           {
             ...baseCliOptions,
-            bundler: undefined,
+            buildTool: undefined,
             addOns: true,
             ...flags,
           },
@@ -273,7 +273,7 @@ describe('promptForCreateOptions', () => {
       const options = await promptForCreateOptions(
         {
           ...baseCliOptions,
-          bundler: undefined,
+          buildTool: undefined,
           addOns: true,
           template,
         },
@@ -290,7 +290,7 @@ describe('promptForCreateOptions', () => {
     vi.mocked(prompts.selectBundler).mockResolvedValue('rsbuild')
 
     const options = await promptForCreateOptions(
-      { ...baseCliOptions, bundler: 'rsbuild', blank: true },
+      { ...baseCliOptions, buildTool: 'rsbuild', blank: true },
       {},
     )
 

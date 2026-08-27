@@ -15,7 +15,7 @@ import { installShadcnComponents } from './integrations/shadcn.js'
 import { setupGit } from './integrations/git.js'
 import { setupIntent } from './integrations/intent.js'
 import { runSpecialSteps } from './special-steps/index.js'
-import { normalizeAndValidateBundlerOptions } from './bundlers.js'
+import { normalizeAndValidateBundlerOptions } from './build-tools.js'
 
 import type { Environment, FileBundleHandler, Options } from './types.js'
 

@@ -22,7 +22,7 @@ export {
   normalizeAndValidateBundlerOptions,
   resolveBundler,
   VITE_BUNDLER,
-} from './bundlers.js'
+} from './build-tools.js'
 export { createSerializedOptions } from './options.js'
 export { CONFIG_FILE } from './constants.js'
 export {

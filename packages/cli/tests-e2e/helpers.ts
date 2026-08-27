@@ -382,7 +382,7 @@ export async function createAppFixture(
     appName,
     '--framework',
     framework,
-    '--bundler',
+    '--build-tool',
     bundler,
     '--package-manager',
     packageManager,

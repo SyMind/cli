@@ -43,7 +43,7 @@ export {
   normalizeAndValidateBundlerOptions,
   resolveBundler,
   VITE_BUNDLER,
-} from './bundlers.js'
+} from './build-tools.js'
 
 export function createWorkerManifestLoader(
   moduleLoader: WorkerManifestModuleLoader,

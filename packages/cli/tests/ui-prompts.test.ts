@@ -110,7 +110,7 @@ describe('selectBundler', () => {
     await expect(selectBundler(framework)).resolves.toBe('rsbuild')
     expect(selectSpy).toHaveBeenCalledWith(
       expect.objectContaining({
-        message: 'Select bundler:',
+        message: 'Select build tool:',
         initialValue: 'vite',
       }),
     )

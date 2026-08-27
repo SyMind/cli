@@ -7,7 +7,7 @@ Targets `@tanstack/cli` v0.71.0.
 | Flag | Works with normal create | Works with `--router-only` | Notes |
 |---|---|---|---|
 | `--framework` | yes | yes | Framework is still honored in both modes. |
-| `--bundler` | yes | yes | `vite` is the default; `rsbuild` supports React and Solid. |
+| `--build-tool` | yes | yes | `vite` is the default; `rsbuild` supports React and Solid. |
 | `--toolchain` | yes | yes | Toolchain selection remains available. |
 | `--add-ons` | yes | no | Ignored in router-only mode. |
 | `--deployment` | yes | no | Ignored in router-only mode. |
@@ -16,7 +16,7 @@ Targets `@tanstack/cli` v0.71.0.
 | `--blank` | yes | yes | Omits starter UI, examples, Tailwind, devtools, and test tooling unless an explicit integration requires them. Cannot be combined with a template, `--examples`, or `--tailwind`. |
 | `--tailwind` / `--no-tailwind` | deprecated/ignored | deprecated/ignored | Standard scaffolds enable Tailwind; use `--blank` for the supported minimal preset. |
 
-With `--bundler rsbuild`, only toolchain catalog entries are compatible.
+With `--build-tool rsbuild`, only toolchain catalog entries are compatible.
 Templates, deployments, and business/example add-ons are rejected. Built-in
 demo pages controlled by `--examples` remain available.
 
@@ -24,7 +24,7 @@ Source: `packages/cli/src/command-line.ts:337`
 
 ## Recommended command construction order
 
-1. Choose framework and bundler.
+1. Choose framework and build tool.
 2. Choose mode (`--router-only` or full scaffold).
 3. If using Vite full scaffold, resolve add-ons, template, and deployment.
 4. Add the toolchain and use `-y` only after flags are final.
@@ -42,5 +42,5 @@ npx @tanstack/cli create app --blank --framework react --deployment cloudflare -
 npx @tanstack/cli create app --router-only --framework react --toolchain biome -y
 
 # Rsbuild preset
-npx @tanstack/cli create app --framework solid --bundler rsbuild --toolchain biome -y
+npx @tanstack/cli create app --framework solid --build-tool rsbuild --toolchain biome -y
 ```

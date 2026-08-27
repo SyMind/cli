@@ -626,7 +626,7 @@ describe('normalizeOptions', () => {
     const options = await normalizeOptions({
       projectName: 'test',
       framework: 'react',
-      bundler: 'rsbuild',
+      buildTool: 'rsbuild',
       toolchain: 'biome',
     })
 
@@ -659,7 +659,7 @@ describe('normalizeOptions', () => {
       const options = await normalizeOptions({
         projectName: 'test',
         framework: 'react',
-        bundler: 'rsbuild',
+        buildTool: 'rsbuild',
         template,
       })
 
@@ -688,7 +688,7 @@ describe('normalizeOptions', () => {
       normalizeOptions({
         projectName: 'test',
         framework: 'react',
-        bundler: 'rsbuild',
+        buildTool: 'rsbuild',
         addOns: ['form'],
       }),
     ).rejects.toThrow('Rsbuild currently supports toolchains only')
@@ -833,7 +833,7 @@ describe('validateLegacyCreateFlags', () => {
     'rejects unsupported Rsbuild combinations containing %s',
     (flags, text) => {
       const result = validateLegacyCreateFlags({
-        bundler: 'rsbuild',
+        buildTool: 'rsbuild',
         ...flags,
       })
 
@@ -843,7 +843,7 @@ describe('validateLegacyCreateFlags', () => {
 
   it('allows Rsbuild with a toolchain', () => {
     const result = validateLegacyCreateFlags({
-      bundler: 'rsbuild',
+      buildTool: 'rsbuild',
       toolchain: 'biome',
     })
 
@@ -854,7 +854,7 @@ describe('validateLegacyCreateFlags', () => {
     'allows Rsbuild with the legacy %s template alias',
     (template) => {
       const result = validateLegacyCreateFlags({
-        bundler: 'rsbuild',
+        buildTool: 'rsbuild',
         template,
       })
 

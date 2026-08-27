@@ -1,7 +1,7 @@
 ---
 name: create-app-scaffold
 description: >
-  Scaffold a TanStack app with tanstack create using --framework, --bundler, --template,
+  Scaffold a TanStack app with tanstack create using --framework, --build-tool, --template,
   --toolchain, --deployment, --add-ons, --blank, and --router-only. Covers flag
   compatibility, non-interactive defaults, and intent-preserving command
   construction.
@@ -36,7 +36,7 @@ fits its initial compatibility surface.
 ```bash
 npx @tanstack/cli create acme-web \
   --framework react \
-  --bundler rsbuild \
+  --build-tool rsbuild \
   --toolchain biome \
   -y
 ```
@@ -175,6 +175,6 @@ See also: query-docs-library-metadata/SKILL.md § Common Mistakes
 
 - [Create flag compatibility matrix](references/create-flag-compatibility-matrix.md)
 - [Framework adapter options](references/framework-adapters.md)
-- [Bundler options](references/bundlers.md)
+- [Build tool options](references/bundlers.md)
 - [Deployment provider options](references/deployment-providers.md)
 - [Toolchain options](references/toolchains.md)

@@ -325,7 +325,7 @@ export function validateLegacyCreateFlags(cliOptions: CliOptions): {
     legacyTemplate !== undefined &&
     SUPPORTED_LEGACY_TEMPLATES.has(legacyTemplate)
 
-  if (cliOptions.bundler?.toLowerCase() === 'rsbuild') {
+  if (cliOptions.buildTool?.toLowerCase() === 'rsbuild') {
     if (
       cliOptions.starter ||
       (cliOptions.template && !isSupportedLegacyTemplate) ||
@@ -513,8 +513,8 @@ export async function normalizeOptions(
   const initialFramework = getFrameworkById(preferredFramework)
   let framework = initialFramework!
   const bundler = initialFramework
-    ? resolveBundler(initialFramework, cliOptions.bundler).id
-    : (cliOptions.bundler ?? 'vite')
+    ? resolveBundler(initialFramework, cliOptions.buildTool).id
+    : (cliOptions.buildTool ?? 'vite')
 
   if (bundler === 'rsbuild') {
     if (

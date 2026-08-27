@@ -11,7 +11,7 @@ import {
   packageManagerInstall,
   translateExecuteCommand,
 } from './package-manager.js'
-import { normalizeAndValidateBundlerOptions } from './bundlers.js'
+import { normalizeAndValidateBundlerOptions } from './build-tools.js'
 
 import type { Environment, FileBundleHandler, Options } from './types.js'
 

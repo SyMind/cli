@@ -143,7 +143,7 @@ describe('telemetry', () => {
 
   it('records raw and resolved bundler selections', () => {
     expect(
-      getCreateTelemetryProperties('app', { bundler: 'rsbuild' }).bundler,
+      getCreateTelemetryProperties('app', { buildTool: 'rsbuild' }).bundler,
     ).toBe('rsbuild')
 
     const finalOptions = {

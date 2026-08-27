@@ -183,7 +183,7 @@ export function getCreateTelemetryProperties(projectName: string, options: CliOp
       : undefined,
     command_variant: getCreateCommandVariant(options),
     deployment: options.deployment ? sanitizeId(options.deployment) : undefined,
-    bundler: options.bundler ? sanitizeId(options.bundler) : undefined,
+    bundler: options.buildTool ? sanitizeId(options.buildTool) : undefined,
     examples: options.examples,
     blank: !!options.blank,
     framework: options.framework ? sanitizeId(options.framework) : undefined,
@@ -311,7 +311,7 @@ export function cli({
     lines.push(`  Location:        ${finalOptions.targetDir}`)
     lines.push(`  Framework:       ${finalOptions.framework.name}`)
     lines.push(
-      `  Bundler:         ${resolveBundler(finalOptions.framework, finalOptions.bundler).name}`,
+      `  Build tool:      ${resolveBundler(finalOptions.framework, finalOptions.bundler).name}`,
     )
     lines.push(`  Mode:            ${finalOptions.mode}`)
     if (finalOptions.projectPreset === 'blank') {
@@ -674,7 +674,7 @@ export function cli({
             const addOns = await getAllAddOns(
               getFrameworkByName(options.framework || defaultFramework || 'React')!,
               defaultMode,
-              options.bundler,
+              options.buildTool,
             )
             const visibleAddOns = addOns.filter((a) => !forcedAddOns.includes(a.id))
             telemetry.mergeProperties({
@@ -720,7 +720,7 @@ export function cli({
             const addOns = await getAllAddOns(
               getFrameworkByName(options.framework || defaultFramework || 'React')!,
               defaultMode,
-              options.bundler,
+              options.buildTool,
             )
             const addOn =
               addOns.find((a) => a.id === options.addonDetails) ??
@@ -975,20 +975,20 @@ export function cli({
 
     cmd
       .option<string>(
-        `--bundler <${Array.from(bundlers).join('|')}>`,
-        'select the project bundler',
+        `--build-tool <${Array.from(bundlers).join('|')}>`,
+        'select the project build tool',
         (value) => {
-          const bundler = Array.from(bundlers).find(
+          const buildTool = Array.from(bundlers).find(
             (item) => item.toLowerCase() === value.toLowerCase(),
           )
-          if (!bundler) {
+          if (!buildTool) {
             throw new InvalidArgumentError(
-              `Invalid bundler: ${value}. The following are allowed: ${Array.from(
+              `Invalid build tool: ${value}. The following are allowed: ${Array.from(
                 bundlers,
               ).join(', ')}`,
             )
           }
-          return bundler
+          return buildTool
         },
       )
       .option(

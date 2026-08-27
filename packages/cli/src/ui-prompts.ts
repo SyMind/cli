@@ -41,7 +41,7 @@ export async function selectBundler(
   }
 
   const selected = await select({
-    message: 'Select bundler:',
+    message: 'Select build tool:',
     options: bundlers.map((bundler) => ({
       value: bundler.id,
       label: bundler.name,

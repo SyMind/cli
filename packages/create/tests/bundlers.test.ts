@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { finalizeAddOns, getAllAddOns } from '../src/add-ons.js'
-import { getBundlers, resolveBundler } from '../src/bundlers.js'
+import { getBundlers, resolveBundler } from '../src/build-tools.js'
 import { createApp } from '../src/create-app.js'
 import { createMemoryEnvironment } from '../src/environment.js'
 import { createFrameworkDefinition as createReactFrameworkDefinition } from '../src/frameworks/react/index.js'
@@ -83,7 +83,7 @@ describe('bundler project generation', () => {
       'vite',
     ])
     expect(() => resolveBundler(framework, 'rsbuild')).toThrow(
-      'Bundler "rsbuild" is not supported by Custom',
+      'Build tool "rsbuild" is not supported by Custom',
     )
   })
 

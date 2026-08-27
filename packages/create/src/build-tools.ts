@@ -31,7 +31,7 @@ export function resolveBundler(
 
   if (!bundler) {
     throw new Error(
-      `Bundler "${requested}" is not supported by ${framework.name}. Supported bundlers: ${bundlers.map((item) => item.id).join(', ')}`,
+      `Build tool "${requested}" is not supported by ${framework.name}. Supported build tools: ${bundlers.map((item) => item.id).join(', ')}`,
     )
   }
 

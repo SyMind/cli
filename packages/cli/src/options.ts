@@ -72,12 +72,12 @@ export async function promptForCreateOptions(
     }
   }
 
-  options.bundler = await selectBundler(options.framework, cliOptions.bundler)
+  options.bundler = await selectBundler(options.framework, cliOptions.buildTool)
 
   if (options.bundler === 'rsbuild') {
     const validation = validateLegacyCreateFlags({
       ...cliOptions,
-      bundler: options.bundler,
+      buildTool: options.bundler,
       addOns:
         Array.isArray(cliOptions.addOns) && cliOptions.addOns.length > 0
           ? cliOptions.addOns

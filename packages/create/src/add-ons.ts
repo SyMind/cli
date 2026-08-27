@@ -3,7 +3,7 @@ import {
   assertAddOnSupportedByBundler,
   isAddOnSupportedByBundler,
   resolveBundler,
-} from './bundlers.js'
+} from './build-tools.js'
 
 import type { AddOn, Framework } from './types.js'
 
